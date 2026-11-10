@@ -2,8 +2,10 @@ package com.example.demoescqrsaxon.commands.controllers;
 
 import com.example.demoescqrsaxon.commands.commands.AddAccountCommand;
 import com.example.demoescqrsaxon.commands.commands.CreditAccountCommand;
+import com.example.demoescqrsaxon.commands.commands.DebitAccountCommand;
 import com.example.demoescqrsaxon.dtos.AddNewAccountRequestDTO;
 import com.example.demoescqrsaxon.dtos.CreditAccountRequestDTO;
+import com.example.demoescqrsaxon.dtos.DebitAccountRequestDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +39,16 @@ public class AccountCommandController {
     @PostMapping("/credit")
     public CompletableFuture<String> creditAccount(@RequestBody CreditAccountRequestDTO request) {
         CompletableFuture<String> response = commandGateway.send(new CreditAccountCommand(
+                request.accountId(),
+                request.amount(),
+                request.currency()
+        ));
+        return response;
+    }
+
+    @PostMapping("/debit")
+    public CompletableFuture<String> debitAccount(@RequestBody DebitAccountRequestDTO request) {
+        CompletableFuture<String> response = commandGateway.send(new DebitAccountCommand(
                 request.accountId(),
                 request.amount(),
                 request.currency()
