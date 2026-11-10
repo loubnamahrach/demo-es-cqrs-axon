@@ -3,15 +3,13 @@ package com.example.demoescqrsaxon.commands.controllers;
 import com.example.demoescqrsaxon.commands.commands.AddAccountCommand;
 import com.example.demoescqrsaxon.commands.commands.CreditAccountCommand;
 import com.example.demoescqrsaxon.commands.commands.DebitAccountCommand;
+import com.example.demoescqrsaxon.commands.commands.UpdateAccountStatusCommand;
 import com.example.demoescqrsaxon.dtos.AddNewAccountRequestDTO;
 import com.example.demoescqrsaxon.dtos.CreditAccountRequestDTO;
 import com.example.demoescqrsaxon.dtos.DebitAccountRequestDTO;
+import com.example.demoescqrsaxon.dtos.UpdateAccountStatusRequestDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +50,15 @@ public class AccountCommandController {
                 request.accountId(),
                 request.amount(),
                 request.currency()
+        ));
+        return response;
+    }
+
+    @PutMapping("/updateStatus")
+    public CompletableFuture<String> updateStatus(@RequestBody UpdateAccountStatusRequestDTO request) {
+        CompletableFuture<String> response = commandGateway.send(new UpdateAccountStatusCommand(
+                request.accountId(),
+                request.accountStatus()
         ));
         return response;
     }
