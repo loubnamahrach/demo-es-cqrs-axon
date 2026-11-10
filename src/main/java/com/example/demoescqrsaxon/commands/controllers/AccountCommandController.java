@@ -1,7 +1,9 @@
 package com.example.demoescqrsaxon.commands.controllers;
 
 import com.example.demoescqrsaxon.commands.commands.AddAccountCommand;
+import com.example.demoescqrsaxon.commands.commands.CreditAccountCommand;
 import com.example.demoescqrsaxon.dtos.AddNewAccountRequestDTO;
+import com.example.demoescqrsaxon.dtos.CreditAccountRequestDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,16 @@ public class AccountCommandController {
         CompletableFuture<String> response = commandGateway.send(new AddAccountCommand(
                 UUID.randomUUID().toString(),
                 request.initialBalance(),
+                request.currency()
+        ));
+        return response;
+    }
+
+    @PostMapping("/credit")
+    public CompletableFuture<String> creditAccount(@RequestBody CreditAccountRequestDTO request) {
+        CompletableFuture<String> response = commandGateway.send(new CreditAccountCommand(
+                request.accountId(),
+                request.amount(),
                 request.currency()
         ));
         return response;
